@@ -13,9 +13,10 @@ pipeline{
             }
         }
 
-        stage("checkout SCM")
+        stage("checkout SCM"){
            steps{
             git branch: 'main', credentialsId: 'github', url: 'https://github.com/adriant223/jenk-full-pipeline'
            }
         }
+      }
     }
