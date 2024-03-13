@@ -1,4 +1,4 @@
-pipeline {
+pipeline{
     agent{
         label "my-working-bee"
     }
@@ -14,10 +14,9 @@ pipeline {
             }
         }
 
-        stage('checkout  [S][C][M]')
+        stage('checkout SCM')
            steps{
             git branch: 'main', credentialsId: 'github', url: 'https://github.com/adriant223/jenk-full-pipeline'
            }
         }
-}
-
+    }
