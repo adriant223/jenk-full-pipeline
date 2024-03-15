@@ -2,9 +2,9 @@ pipeline {
   agent {
     label "my-working-bee"
   }
-  tools {
-    // Add any necessary tools here (e.g., Python)
-  }
+//   tools {
+//     // Add any necessary tools here (e.g., Python)
+//   }
   stages {
     stage("del WS") {
       steps {
