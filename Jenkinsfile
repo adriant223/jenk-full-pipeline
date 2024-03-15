@@ -3,17 +3,16 @@ pipeline{
         label "my-working-bee"
     }
     tools{
-        jdk 'Java17'
-        maven 'Maven3'
+       sh "python3"
     }
     stages{
-        stage("Workspace cleaning") {
+        stage("del WS") {
             steps {
                 cleanWs()
             }
         }
 
-        stage("checkout SCM"){
+        stage("Git checkout"){
            steps{
             git branch: 'main', credentialsId: 'github', url: 'https://github.com/adriant223/jenk-full-pipeline'
            }
