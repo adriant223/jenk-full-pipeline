@@ -11,7 +11,7 @@ def test_api_process(client):
     assert len(resp_payload["processes"]) > 0
     assert resp_payload["processes"][0]["memory_percent"] > 0
     assert len(resp_payload["processes"][0]["name"]) > 0
-
+print("Test API 1/1 api_process succeded!")
 
 # Test the monitor API returns JSON results we expect
 def test_api_monitor(client):
@@ -27,3 +27,5 @@ def test_api_monitor(client):
     assert resp_payload["mem"] >= 0
     assert resp_payload["net_recv"] >= 0
     assert resp_payload["net_sent"] >= 0
+
+print("Test API 2/2 api_monitor succeded!")
