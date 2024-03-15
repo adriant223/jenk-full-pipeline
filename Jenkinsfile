@@ -30,8 +30,8 @@ pipeline {
     stage("Install Dependencies and Run Script") {
       steps {
         script {
-          sh 'source venv/bin/activate'  # Activate the virtual environment
-          sh 'venv/bin/pip install flask py-cpuinfo psutil'  # Install dependencies within venv
+          sh 'source venv/bin/activate'  // Activate the virtual environment
+          sh 'venv/bin/pip install flask py-cpuinfo psutil'  // Install dependencies within venv
           sh 'venv/bin/python src/run.py'  // Execute the Python script
         }
       }
