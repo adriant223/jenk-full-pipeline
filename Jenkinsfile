@@ -21,7 +21,7 @@ pipeline {
     stage("Install dependencies") {  // Added stage for running the script
       steps {
         script {  // Use the 'script' block for shell commands
-          sh 'pip3 install flask'  // Execute the Python script
+          sh 'sudo pip3 install flask'  // Execute the Python script
         }
       }
     }
