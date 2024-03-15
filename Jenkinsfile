@@ -18,19 +18,21 @@ pipeline {
       }
     }
 
-    stage("Install dependencies") {  // Added stage for running the script
+    stage("Create Virtual Environment") {
       steps {
-        script {  // Use the 'script' block for shell commands
-          sh 'sudo pip3 install flask'
-          sh 'sudo pip3 install py-cpuinfo'  // Execute the Python script
+        script {
+          sh 'python3 -m venv venv'  // Create virtual environment named 'venv'
         }
       }
     }
 
-    stage("Run Python Script") {  // Added stage for running the script
+    // Stage 2: Install Dependencies and Run Script
+    stage("Install Dependencies and Run Script") {
       steps {
-        script {  // Use the 'script' block for shell commands
-          sh 'python3 src/run.py'  // Execute the Python script
+        script {
+          sh 'source venv/bin/activate'  # Activate the virtual environment
+          sh 'venv/bin/pip install flask py-cpuinfo psutil'  # Install dependencies within venv
+          sh 'venv/bin/python src/run.py'  // Execute the Python script
         }
       }
     }
