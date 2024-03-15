@@ -1,6 +1,6 @@
 pipeline {
   agent {
-    label "my-working-bee"
+    label "working-bee"
   }
 //   tools {
 //     // Add any necessary tools here (e.g., Python)
