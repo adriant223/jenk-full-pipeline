@@ -3,7 +3,7 @@ pipeline {
     label "working-bee"
   }
   tools {
-    sonarQube 'hudson.plugins.sonar.SonarRunnerInstallation'
+    sonarQube 'sonar'
   }
   stages {
     stage("del WS") {
