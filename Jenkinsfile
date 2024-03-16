@@ -55,9 +55,10 @@ pipeline {
         }    
           stage("Code Analysis") {
       steps {
+        script{
         withSonarQubeEnv(credentialsId: 'jenkins-sonarqube')
             sh 'python3 sonar:sonar'
-
+      }
       }
     }
     }
