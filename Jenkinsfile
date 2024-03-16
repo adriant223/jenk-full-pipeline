@@ -30,7 +30,7 @@ pipeline {
     steps{
         script{
             withSonarQubeEnv(credentialsId: 'jenkins-sonarqube')
-            sh 'python3 sonar:sonar'
+            sh 'mvn clean package sonar:sonar'
       }
         }
       }
