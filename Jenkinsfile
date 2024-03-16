@@ -2,9 +2,9 @@ pipeline {
   agent {
     label "working-bee"
   }
-  tools {
-    sonarQube 'sonar'
-  }
+//   tools {
+//     sonarQube 'sonar'
+//   }
   stages {
     stage("del WS") {
       steps {
@@ -56,9 +56,12 @@ pipeline {
   stage('SonarQube Analysis') {
     steps{
         script{
-    def scannerHome = tool 'SonarScanner';
-    withSonarQubeEnv() {
-      sh "${scannerHome}/bin/sonar-scanner"      
+                    withSonarQubeEnv(credentialsId: 'jenkins-sonarqube') {
+                        sh 'sonar-scanner \
+                            -Dproject.keys=code-scanner \
+                            -Dsonar.projectKey=code-scanner \
+                            -Dsonar.sources=src/run.py \
+                            -Dsonar.python.version=3.8' // Replace with your Python version      
       }
         }
       }
