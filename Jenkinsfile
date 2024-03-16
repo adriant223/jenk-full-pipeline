@@ -53,11 +53,10 @@ pipeline {
         }
       }
         }    
-          stage("Code Analysis") {
-      steps {
-        script{
-        withSonarQubeEnv(credentialsId: 'jenkins-sonarqube')
-            sh 'python3 sonar:sonar'
+  stage('SonarQube Analysis') {
+    def scannerHome = tool 'SonarScanner';
+    withSonarQubeEnv() {
+      sh "${scannerHome}/bin/sonar-scanner"      
       }
       }
     }
