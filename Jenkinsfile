@@ -56,12 +56,8 @@ pipeline {
   stage('SonarQube Analysis') {
     steps{
         script{
-                    withSonarQubeEnv(credentialsId: 'jenkins-sonarqube') {
-                        sh '${sonar}/bin/SonarQube \
-                            -Dproject.keys=code-scanner \
-                            -Dsonar.projectKey=code-scanner \
-                            -Dsonar.sources=src/run.py \
-                            -Dsonar.python.version=3.8' // Replace with your Python version      
+            withSonarQubeEnv(credentialsId: 'jenkins-sonarqube')
+            sh 'mvn sonar:sonar'
       }
         }
       }
