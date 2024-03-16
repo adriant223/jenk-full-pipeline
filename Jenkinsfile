@@ -42,5 +42,5 @@ stage('Sonarqube') {
 }
     }
 }
-
+}
 
