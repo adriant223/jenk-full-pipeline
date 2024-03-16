@@ -26,7 +26,7 @@ pipeline {
         }
       }
         }    
-stage('Sonarqube') {
+stage('Sonar Analyzing code') {
     environment {
         scannerHome = tool 'sonar-qube-scanner'
     }
@@ -40,8 +40,15 @@ stage('Sonarqube') {
                 }
             }
          }
-    }
-
-
-}
+    stage('Sonar Quality Gate') {
+        steps{
+            script{
+                waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube'
+                }
+            }
+        }
+         
+         
+         } // stages ending
+} // pipe line ending
 
