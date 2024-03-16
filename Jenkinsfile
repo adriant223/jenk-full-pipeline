@@ -48,7 +48,6 @@ pipeline {
         stage("Test App") {
       steps {
         script {
-          sh 'python3 src/run.py'
           sh 'python3 src/app/tests/test_api.py'
           sh 'python3 src/app/tests/test_views.py'
         }
