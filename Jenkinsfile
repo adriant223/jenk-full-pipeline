@@ -3,7 +3,7 @@ pipeline {
     label "working-bee"
   }
   tools {
-    sonarQube 'SonarQube'
+    sonarQube 'hudson.plugins.sonar.SonarRunnerInstallation'
   }
   stages {
     stage("del WS") {
@@ -55,10 +55,12 @@ pipeline {
         }    
   stage('SonarQube Analysis') {
     steps{
+        script{
     def scannerHome = tool 'SonarScanner';
     withSonarQubeEnv() {
       sh "${scannerHome}/bin/sonar-scanner"      
       }
+        }
       }
     }
     }
