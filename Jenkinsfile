@@ -26,14 +26,19 @@ pipeline {
         }
       }
         }    
-  stage('SonarQube Analysis') {
-    steps{
-        script{
-            withSonarQubeEnv(credentialsId: 'jenkins-sonarqube')
-            sh 'mvn clean package sonar:sonar'
-      }
+stage('Sonarqube') {
+    environment {
+        scannerHome = tool 'sonar-qube-scanner'
+    }
+    steps {
+        withSonarQubeEnv('sonarqube') {
+            sh "${scannerHome}/bin/sonar-scanner"
         }
-      }
+        timeout(time: 10, unit: 'MINUTES') {
+            waitForQualityGate abortPipeline: true
+        }
+    }
+}
     }
 }
 
