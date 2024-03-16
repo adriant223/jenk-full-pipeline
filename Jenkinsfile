@@ -2,9 +2,9 @@ pipeline {
   agent {
     label "working-bee"
   }
-//   tools {
-//     // Add any necessary tools here (e.g., Python)
-//   }
+  tools {
+    sonarQube 'SonarQube'
+  }
   stages {
     stage("del WS") {
       steps {
@@ -54,6 +54,7 @@ pipeline {
       }
         }    
   stage('SonarQube Analysis') {
+    steps{
     def scannerHome = tool 'SonarScanner';
     withSonarQubeEnv() {
       sh "${scannerHome}/bin/sonar-scanner"      
@@ -61,5 +62,6 @@ pipeline {
       }
     }
     }
+}
 
 
