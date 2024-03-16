@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Commands Documentation</title>
+<style>
+  body {
+    font-family: monospace; /* Use a monospaced font for terminal-like look */
+    background-color: #000; /* Black background */
+    color: #2fad59; /* Green text */
+    padding: 20px;
+    margin: 0;
+  }
+
+  h1 {
+    color: inherit; /* Inherit green color from body */
+  }
+
+  
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    color: inherit; /* Inherit green text from body */
+  }
+
+  th, td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #333; /* Smooth border for all cells */
+  }
+
+  th {
+    background-color: #111; /* Slightly darker background for table header */
+  }
+
+  h2 {
+    margin-top: 20px;
+    color: inherit; /* Inherit green text from body */
+  }
+
+  .accordion {
+    background-color: #222; /* Slightly darker background for accordion button */
+    color: inherit; /* Inherit green text from body */
+    cursor: pointer;
+    padding: 10px 16px;
+    transition: 0.3s ease all;
+    border: none; /* Remove default button border */
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+  }
+
+  /* Button hover effect with red border */
+  .accordion:hover {
+    background-color: #333; /* Slightly darker background on hover */
+    border: 2px solid red; /* Add red border on hover */
+  }
+
+  .active, .accordion:hover {
+    background-color: inherit; /* Remove redundant background color for active state */
+  }
+
+  .content {
+    padding: 0 18px;
+    display: none; /* Initially hide the content */
+    overflow: auto; /* Enable scrolling for long configurations */
+  }
+
+  .show {
+    display: block; /* Show the content on click */
+  }
+  .copy-code {
+  /* Base styles for the button */
+  display: inline-block; /* Allow inline display */
+  padding: 2px 6px;
+  border: 4px solid #a61bc2; /* Light gray border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Indicate clickable behavior */
+  background-color: #eee; /* Light background color */
+}
+
+.copy-code:hover {
+  /* Change border and background color on hover */
+  border-color: #c3c5ce; /* Slightly darker gray border */
+  background-color: #3ba3cc; /* Slightly darker background */
+}
+
+.copy-code.copied {
+  /* Styles after clicking (copied state) */
+  border-color: #4CAF50; /* Green border (success) */
+  background-color: #dff0df; /* Light green background */
+}
+
+.copy-code.copied.reset {
+  /* Reset styles after a delay (optional) */
+  border-color: #ccc; /* Back to original border color */
+  background-color: #eee; /* Back to original background color */
+}
+code {
+  display: block;
+  white-space: pre-wrap   
+}
+</style>
+</head>
+<body>
+
+<h1>Command Documentation</h1>
+
+<h2>Jenkins Master</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Description</th>
+      <th>Logic</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <!-- <td>sudo useradd -m -d /home/jenkins -s /bin/bash jenkins</td> -->
+      <td class="code-cell">
+        sudo useradd -m -d /home/jenkins -s /bin/bash jenkins
+        <button class="copy-code"></button>
+      </td>
+      </td>
+      <td>Creates a new system user named "jenkins" with a home directory at /home/jenkins and sets the login shell to bash.</td>
+      <td>- This user will be used to run Jenkins.</td>
+      
+    </tr>
+    <tr>
+      <td class="code-cell">
+        sudo usermod -aG wheel jenkins
+        <button class="copy-code"></button>
+      <td>Adds the user "jenkins" to the "wheel" group, which grants administrative privileges.</td>
+      <td>- Allows the Jenkins user to use sudo for administrative tasks.</td>
+    </tr>
+    <tr>
+      <td class="code-cell">
+        sudo vi /etc/sudo 
+        <button class="copy-code"></button>
+      <td>Edits the sudoers file to grant the "wheel" group sudo access (uncomment the relevant line).</td>
+      <td>- Allows users in the "wheel" group to run commands with elevated privileges.</td>
+    </tr>
+    <tr>
+<td class="code-cell">
+    <code>sudo cat << EOF > /etc/yum.repos.d/adoptium.repo
+[Adoptium]
+name=Adoptium
+baseurl=https://packages.adoptium.net/artifactory/rpm/${DISTRIBUTION_NAME:-$(. /etc/os-release; echo $ID)}/\$releasever/\$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.adoptium.net/artifactory/api/gpg/key/public
+EOF
+    </code>
+    <button class="copy-code"></button>
+      <td>Creates a new repository file named "adoptium.repo" for installing the Temurin JDK.</td>
+      <td>- Enables installation of the Temurin JDK from the Adoptium repository.</td>
+    </tr>
+    <tr>
+      <td class="code-cell">
+        sudo mkdir -p /usr/share/keyrings/ && sudo bash -c 'curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | tee /usr/share/keyrings/jenkins-keyring.asc'
+        <button class="copy-code"></button>
+      <td>Creates a directory for GPG keys and downloads the Jenkins GPG key.</td>
+      <td>- This key is used to verify the integrity of downloaded Jenkins packages.</td>
+    </tr>
+    <tr>
+<td class="code-cell">
+    <code>
+sudo sh -c cat << EOF > /etc/yum.repos.d/jenkins.repo
+[jenkins]
+name=Jenkins-stable
+baseurl=http://pkg.jenkins.io/redhat
+gpgcheck=1
+EOF
+</code>
+    <button class="copy-code"></button>
+      <td>Creates a new repository file named "jenkins.repo" for installing Jenkins.</td>
+      <td>- Enables installation of Jenkins packages from the official Jenkins repository.</td>
+    </tr>
+    <tr>
+      <td class="code-cell">
+        sudo dnf install temurin-17-jdk -y
+        <button class="copy-code"></button>
+      <td>Installs the Temurin 17 JDK.</td>
+      <td>- Java Development Kit required for running Jenkins.</td>
+    </tr>
+    <tr>
+      <td class="code-cell">
+        sudo dnf install jenkins --nogpgcheck -y
+        <button class="copy-code"></button>
+      <td>Installs Jenkins (ignores GPG key verification).</td>
+      <td>- Installs the Jenkins server software.</td>
+    </tr>
+    <tr>
+      <td class="code-cell">
+        sudo dnf install nginx
+        <button class="copy-code"></button>
+      <td>Installs Nginx web server.</td>
+      <td>- Nginx will be used as a reverse proxy for Jenkins.</td>
+    </tr>
+    <tr>
+      <td class="code-cell">
+        sudo vi /etc/nginx/nginx.conf
+        <button class="copy-code"></button>
+      <td colspan="2">Edits the default Nginx configuration file (remove existing server configuration).</td>
+    </tr>
+    <tr>
+      <td>Create a new configuration file named "jenkins.conf" in the "/etc/nginx/conf.d/" directory.</td>
+      <td colspan="2">Configures Nginx to act as a reverse proxy for Jenkins.</td>
+      <tr><td>Add a new file in /etc/nginx/conf.d file named jenkins.conf with the content from the Jekins-Confing-Nginx</td></tr>
+    </tr>
+    <tr><td><button class="accordion">Jenkins-Config-Nginx</button>
+<div class="content">
+  <pre>
+upstream jenkins {
+keepalive 32; # keepalive connections
+server 127.0.0.1:8080; # jenkins ip and port
+}
+
+# Required for Jenkins websocket agents
+map $http_upgrade $connection_upgrade {
+default upgrade;
+'' close;
+}
+
+server {
+listen          80;       # Listen on port 80 for IPv4 requests
+
+server_name     at-jenk.com;  # replace 'jenkins.example.com' with your server domain name
+
+# this is the jenkins web root directory
+# (mentioned in the output of "systemctl cat jenkins")
+root            /var/run/jenkins/war/;
+
+access_log      /var/log/nginx/jenkins.access.log;
+error_log       /var/log/nginx/jenkins.error.log;
+
+# pass through headers from Jenkins that Nginx considers invalid
+ignore_invalid_headers off;
+
+location ~ "^/static/[0-9a-fA-F]{8}\/(.*)$" {
+# rewrite all static files into requests to the root
+# E.g /static/12345678/css/something.css will become /css/something.css
+rewrite "^/static/[0-9a-fA-F]{8}\/(.*)" /$1 last;
+}
+
+location /userContent {
+# have nginx handle all the static requests to userContent folder
+# note : This is the $JENKINS_HOME dir
+root /var/lib/jenkins/;
+if (!-f $request_filename){
+# this file does not exist, might be a directory or a /**view** url
+rewrite (.*) /$1 last;
+break;
+}
+sendfile on;
+}
+
+location / {
+sendfile off;
+proxy_pass         http://jenkins;
+proxy_redirect     default;
+proxy_http_version 1.1;
+
+# Required for Jenkins websocket agents
+proxy_set_header   Connection        $connection_upgrade;
+proxy_set_header   Upgrade           $http_upgrade;
+
+proxy_set_header   Host              $http_host;
+proxy_set_header   X-Real-IP         $remote_addr;
+proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+proxy_set_header   X-Forwarded-Proto $scheme;
+proxy_max_temp_file_size 0;
+
+#this is the maximum upload size
+client_max_body_size       10m;
+client_body_buffer_size    128k;
+
+proxy_connect_timeout      90;
+proxy_send_timeout         90;
+proxy_read_timeout         90;
+proxy_request_buffering    off; # Required for HTTP CLI commands
+}
+
+}
+  </pre>
+</div></td><td>Jekins config for /etc/nginx.conf.d/jenkins.conf</td>
+<td>- Settings for nginx config jenkins.conf</td></tr>
+<tr>
+    <td class="code-cell">
+        setenforce permissive
+        <button class="copy-code"></button>
+    <td>modify selinux mode in order to avoid 502 bad gateway error from nginx</td>
+    <td>- Selinux enforce type must be set to permissive</td>
+</tr>
+<tr>
+    <td class="code-cell">
+        sudo dnf install git
+        <button class="copy-code"></button>
+    <td>git will be needed</td>
+    <td>- Jenkins agent will use git to grab our 'Jenkins' file from the git-repo</td>
+</tr>
+
+<tr><td><h2>Jenkins Agent</h2>  </td>
+<td style="color: red;">
+    JENKINS-AGENT COMMANDS SECTION STARTS HERE.
+</td></tr>
+
+
+    <tr>
+      <td class="code-cell">
+        sudo useradd -m -d /home/jenkins -s /bin/bash jenkins
+        <button class="copy-code"></button>
+      <td>Creates a new system user named "jenkins" with a home directory at /home/jenkins and sets the login shell to bash.</td>
+      <td>- Creates a dedicated user for the Jenkins agent to run processes.</td>
+    </tr>
+    <tr>
+      <td class="code-cell">
+        sudo usermod -aG wheel jenkins
+        <button class="copy-code"></button>
+      <td>Adds the user "jenkins" to the "wheel" group, which grants administrative privileges.</td>
+      <td>- Grants the Jenkins agent user sudo access for essential tasks (if needed).</td>
+    </tr>
+    <tr>
+      <td class="code-cell">
+        sudo vi /etc/sudo
+        <button class="copy-code"></button>
+      <td>Edits the sudoers file to grant the "wheel" group sudo access (uncomment the relevant line).</td>
+      <td>- Potentially enables sudo access for the Jenkins user (review sudoers policy for security).</td>
+    </tr>
+    <tr>
+<td class="code-cell">
+    <code>
+sudo cat << EOF > /etc/yum.repos.d/adoptium.repo
+[Adoptium]
+name=Adoptium
+baseurl=https://packages.adoptium.net/artifactory/rpm/${DISTRIBUTION_NAME:-$(. /etc/os-release; echo $ID)}/\$releasever/\$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.adoptium.net/artifactory/api/gpg/key/public
+EOF
+    </code>
+    <button class="copy-code"></button>
+      <td>Adds a repository for Adoptium OpenJDK to the system (for Red Hat-based systems).</td>
+      <td>- Defines a repository source for installing Adoptium OpenJDK, required by Jenkins.</td>
+    </tr>
+    <tr>      <td class="code-cell">
+        wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc
+        <button class="copy-code"></button>
+      <td>Downloads the GPG key for the Adoptium OpenJDK repository (for Debian/Ubuntu systems).</td>
+      <td>- Downloads the GPG key to verify the integrity of the Adoptium repository (applicable for Debian/Ubuntu).</td>
+    </tr>
+    <tr>
+            <td class="code-cell">
+                sudo yum remove docker \
+                docker-client \
+                docker-client-latest \
+                docker-common \
+                docker-latest \
+                docker-latest-logrotate \
+                docker-logrotate \
+                docker-engine
+                <button class="copy-code"></button>
+        <td>Removes existing Docker packages and engine (if present).</td>
+        <td>- Ensures a clean installation of Docker by removing any potentially conflicting packages.</td>
+      </tr>
+      <tr>
+        <td class="code-cell">
+            sudo yum install -y yum-utils
+            <button class="copy-code"></button>
+        <td>Installs the yum-utils package.</td>
+        <td>- This package might be required for the next command (`yum-config-manager`).</td>
+      </tr>
+      <tr>
+        <td class="code-cell">
+            sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+            <button class="copy-code"></button>
+        <td>Adds the Docker official repository for the specific CentOS version.</td>
+        <td>- Points your system to the official Docker repository to download the latest and compatible version.</td>
+      </tr>
+      <tr>
+        <td class="code-cell">
+            sudo yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+            <button class="copy-code"></button>
+        <td>Installs Docker Engine, client, containerd, and additional plugins.</td>
+        <td>- Installs the core Docker components and plugins needed for container orchestration.</td>
+      </tr>
+      <tr>
+        <td class="code-cell">
+            sudo systemctl start docker.service
+            <button class="copy-code"></button>
+        <td>Starts the Docker service.</td>
+        <td>- Enables Docker to run containerized applications.</td>
+      </tr>
+      <tr>
+        <td class="code-cell">
+            mkdir ~/.ssh
+            <button class="copy-code"></button>
+        <td>Creates the hidden directory ".ssh" in the user's home directory (if it doesn't exist).</td>
+        <td>- This directory will store SSH keys for agent authentication.</td>
+      </tr>
+      <tr>
+        <td class="code-cell">
+            cd ~/.ssh/ && ssh-keygen -t rsa -m PEM -C "jenk-agent" -f "jenk-agent_rsa"
+            <button class="copy-code"></button>
+        <td>Generates an SSH key pair (RSA with PEM format) named "jenk-agent_rsa" in the ".ssh" directory.</td>
+        <td>- Creates an SSH key pair for the Jenkins agent to authenticate with the Jenkins server.</td>
+      </tr>
+      <tr>
+            <td class="code-cell">
+<code>
+sudo cat jenk-agent_rsa.pub >> ~/.ssh/authorized_keys<br>
+sudo chmod 700 ~/.ssh<br>
+sudo chmod 600 ~/.ssh/authorized_keys ~/.ssh/jenk-agent_rsa<br>
+sudo cat ~/.ssh/jenk-agent_rsa
+</code>
+<button class="copy-code"></button>
+        <td>Configures SSH key access and installs Python 3 development libraries.</td>
+        <td>- **First line:** Appends the public key (jenk-agent_rsa.pub) to the authorized_keys file, enabling SSH access for the Jenkins agent (if configured on the Jenkins server to accept this key).<br>
+            - **Second line:** Sets access permissions on the ".ssh" directory to 700 (read, write, and execute permissions only for the owner).<br>
+            - **Third line:** Sets access permissions on authorized_keys and jenk-agent_rsa files to 600 (read and write permissions only for the owner).<br>
+            - **Fourth line:** Prints the contents of the private key (jenk-agent_rsa) for reference (might be useful for copying the key to the Jenkins server).</td>
+      </tr>
+      <tr>
+        <td class="code-cell">
+            sudo yum install python3-devel
+            <button class="copy-code"></button>
+        <td>Installs the development libraries for Python 3.</td>
+        <td>- Provides necessary tools and libraries for building Python 3 extensions or applications.</td>
+      </tr>
+<tr><td><h2>SonarQube</h2></td>
+<td style="color: red;">SONAR-QUBE SECTION STARTS HERE</td></tr>
+        <td class="code-cell">
+<code>
+sudo cat << EOF > /etc/yum.repos.d/adoptium.repo
+[Adoptium]
+name=Adoptium
+baseurl=https://packages.adoptium.net/artifactory/rpm/${DISTRIBUTION_NAME:-$(. /etc/os-release; echo $ID)}/\$releasever/\$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.adoptium.net/artifactory/api/gpg/key/public
+EOF
+</code>
+        <button class="copy-code"></button>
+        </td>
+        <td>Installs the Adoptium Temurin JDK 17 repository.</td>
+        <td>- Enables installation of Temurin JDK 17 for running SonarQube.</td>
+        </tr>
+        
+        <tr>
+        <td class="code-cell">
+        dnf install temurin-17-jdk
+        <button class="copy-code"></button>
+        </td>
+        <td>Installs the Temurin JDK 17.</td>
+        <td>- Provides the Java runtime environment required by SonarQube.</td>
+        </tr>
+        
+        <tr>
+        <td class="code-cell">
+        dnf install unzip
+        <button class="copy-code"></button>
+        </td>
+        <td>Installs the unzip package.</td>
+        <td>- Needed for extracting the downloaded SonarQube distribution.</td>
+        </tr>
+        
+        <tr>
+        <td class="code-cell">
+        rpm -Uvh https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+        <button class="copy-code"></button>
+        </td>
+        <td>Installs the PostgreSQL repository.</td>
+        <td>- Enables installation of the PostgreSQL database server used by SonarQube.</td>
+        </tr>
+        
+        <tr>
+        <td class="code-cell">
+        sudo yum install postgresql-server postgresql-contrib
+        <button class="copy-code"></button>
+        </td>
+        <td>Installs the PostgreSQL server and additional contrib packages.</td>
+        <td>- Sets up the PostgreSQL database for SonarQube.</td>
+        </tr>
+        
+        <tr>
+        <td class="code-cell">
+        sudo systemctl start postgresql.service
+        <button class="copy-code"></button>
+        </td>
+        <td>Starts the PostgreSQL database server.</td>
+        <td>- Makes the database server available for SonarQube to connect.</td>
+        </tr>
+        
+        <tr>
+        <td class="code-cell">
+        su - postgres
+        
+        createuser sonar
+        <button class="copy-code"></button>
+        </td>
+        <td>Creates a new PostgreSQL user named "sonar".</td>
+        <td>- This user will be used by SonarQube to access the database.</td>
+        </tr>
+            <tr>
+              <td class="code-cell">
+                <code>
+psql
+
+ALTER USER sonar WITH ENCRYPTED password 'sonar';
+
+CREATE DATABASE sonarqube OWNER sonar;
+
+grant all privileges on DATABASE sonarqube to sonar;
+
+\q
+        </code>
+                <button class="copy-code"></button>
+              </td>
+              <td>Configures the PostgreSQL user and database for SonarQube.</td>
+              <td>- Sets the SonarQube user password.
+                  - Creates a database named "sonarqube".
+                  - Grants all privileges on the database to the SonarQube user.</td>
+            </tr>
+          
+            <tr>
+              <td class="code-cell">
+                sudo vim /etc/security/limits.conf
+          
+          # Add the following lines:
+          
+          sonarqube  -  nofile  65536
+          sonarqube  -  nproc  4096
+          
+                <button class="copy-code"></button>
+              </td>
+              <td>Increases system resource limits for the SonarQube user.</td>
+              <td>- Sets the maximum number of open files for the SonarQube user to 65536.
+                  - Sets the maximum number of processes for the SonarQube user to 4096.
+                  - **Note:** You may need to adjust these values based on your system resources and SonarQube requirements.</td>
+            </tr>
+          
+            <tr>
+              <td class="code-cell">
+                sudo vim /etc/sysctl.conf
+          
+          # Add the following line:
+          
+          vm.max_map_count = 262144
+          
+                <button class="copy-code"></button>
+              </td>
+              <td>Increases a system-wide virtual memory limit.</td>
+              <td>- Sets the maximum number of memory mappings to 262144.
+                  - This may be helpful for handling large codebases in SonarQube.</td>
+            </tr>
+          
+            <tr>
+              <td class="code-cell">
+                sudo reboot
+          
+                <button class="copy-code"></button>
+              </td>
+              <td>Reboots the system to apply the changes to resource limits.</td>
+              <td>- **Important:** This step is necessary for the resource limit changes to take effect.</td>
+            </tr>
+          
+            <tr>
+              <td class="code-cell">
+<code>
+sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.9.0.65466.zip
+sudo apt install unzip
+sudo unzip sonarqube-9.9.0.65466.zip -d /opt
+sudo mv /opt/sonarqube-9.9.0.65466 /opt/sonarqube
+
+sudo groupadd sonar
+sudo useradd -c "user to run SonarQube" -d /opt/sonarqube -g sonar sonar
+sudo chown sonar:sonar /opt/sonarqube -R
+</code>   
+                <button class="copy-code"></button>
+              </td>
+              <td>Downloads, extracts, and moves the SonarQube binary.</td>
+              <td>- Downloads the specified SonarQube distribution.
+                  - Installs the unzip package (if not already installed).
+                  - Extracts the downloaded archive to the `/opt` directory.
+                  - Moves the extracted directory to `/opt/sonarqube`.</td>
+            </tr>
+          
+            <tr>
+              <td class="code-cell">
+                sudo vim /opt/sonarqube/conf/sonar.properties
+
+          
+                <button class="copy-code"></button>
+              </td>
+              <td>
+<code>    
+sonar.jdbc.username=sonar
+sonar.jdbc.password=sonar
+sonar.jdbc.url=jdbc:postgresql://localhost:5432/sonarqube
+</code>      </td>
+              <td>- Sets the database username to "sonar".
+                  - Sets the database password to "sonar" (ensure this matches the password set earlier).
+                  - Sets the JDBC URL to connect to the "sonarqube" database on the local machine (localhost) port 5432.</td>
+                </tr>
+                <tr>
+                    <td class="code-cell">
+                      sudo vim /etc/systemd/system/sonar.service
+                      <button class="copy-code"></button>
+                    </td>
+                    <td>
+<code>                                             
+[Unit]
+Description=SonarQube service
+After=syslog.target network.target
+
+[Service]
+Type=forking
+
+ExecStart=/opt/sonarqube/bin/linux-x86-64/sonar.sh start
+ExecStop=/opt/sonarqube/bin/linux-x86-64/sonar.sh stop
+
+User=sonar
+Group=sonar
+Restart=always
+
+LimitNOFILE=65536
+LimitNPROC=4096
+
+[Install]
+WantedBy=multi-user.target
+</code> </td>
+                    <td>- The contents of the service file should be as seen in the left panel.</td>
+                  </tr>
+                
+                  <tr>
+                    <td class="code-cell">
+                      sudo systemctl start sonar
+                      sudo systemctl enable sonar
+                      sudo systemctl status sonar
+                      <button class="copy-code"></button>
+                    </td>
+                    <td>Starts, enables, and checks the status of the SonarQube service.</td>
+                    <td>- `systemctl start sonar`: Starts the service immediately.
+                        - `systemctl enable sonar`: Enables the service to start automatically at boot.
+                        - `systemctl status sonar`: Checks the current status of the service.
+                      </td>
+                  </tr>
+                
+                  <tr>
+                    <td class="code-cell">
+                      sudo dnf install nginx
+                      <button class="copy-code"></button>
+                    </td>
+                    <td>Installs the Nginx web server.</td>
+                    <td>- This step is likely to be used for configuring a reverse proxy for SonarQube.</td>
+                  </tr>
+                  <tr>
+                    <td class="code-cell">
+                      sudo vi /etc/nginx/nginx.conf
+                      <button class="copy-code"></button>
+                    <td colspan="2">Edits the default Nginx configuration file (remove existing server configuration).</td>
+                  </tr>
+                  <tr>
+                    <td>Create a new configuration file named "sonar.conf" in the "/etc/nginx/conf.d/" directory.</td>
+                    <td colspan="2">Configures Nginx to act as a reverse proxy for SonarQube.</td>
+                    <tr><td>Add a new file in /etc/nginx/conf.d file named sonar.conf with the content from the Sonar-Confing-Nginx</td></tr>
+                  </tr><tr><td><button class="accordion">SonarQube-Config-Nginx</button>
+                    <div class="content">
+                      <pre>
+upstream jenkins {
+keepalive 32; # keepalive connections
+server 127.0.0.1:8080; # jenkins ip and port
+}
+
+# Required for Jenkins websocket agents
+map $http_upgrade $connection_upgrade {
+default upgrade;
+'' close;
+}
+
+server {
+listen          80;       # Listen on port 80 for IPv4 requests
+
+server_name     at-jenk.com;  # replace 'jenkins.example.com' with your server domain name
+
+# this is the jenkins web root directory
+# (mentioned in the output of "systemctl cat jenkins")
+root            /var/run/jenkins/war/;
+
+access_log      /var/log/nginx/jenkins.access.log;
+error_log       /var/log/nginx/jenkins.error.log;
+
+# pass through headers from Jenkins that Nginx considers invalid
+ignore_invalid_headers off;
+
+location ~ "^/static/[0-9a-fA-F]{8}\/(.*)$" {
+# rewrite all static files into requests to the root
+# E.g /static/12345678/css/something.css will become /css/something.css
+rewrite "^/static/[0-9a-fA-F]{8}\/(.*)" /$1 last;
+}
+
+location /userContent {
+# have nginx handle all the static requests to userContent folder
+# note : This is the $JENKINS_HOME dir
+root /var/lib/jenkins/;
+if (!-f $request_filename){
+# this file does not exist, might be a directory or a /**view** url
+rewrite (.*) /$1 last;
+break;
+}
+sendfile on;
+}
+
+location / {
+sendfile off;
+proxy_pass         http://jenkins;
+proxy_redirect     default;
+proxy_http_version 1.1;
+
+# Required for Jenkins websocket agents
+proxy_set_header   Connection        $connection_upgrade;
+proxy_set_header   Upgrade           $http_upgrade;
+
+proxy_set_header   Host              $http_host;
+proxy_set_header   X-Real-IP         $remote_addr;
+proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+proxy_set_header   X-Forwarded-Proto $scheme;
+proxy_max_temp_file_size 0;
+
+#this is the maximum upload size
+client_max_body_size       10m;
+client_body_buffer_size    128k;
+
+proxy_connect_timeout      90;
+proxy_send_timeout         90;
+proxy_read_timeout         90;
+proxy_request_buffering    off; # Required for HTTP CLI commands
+}
+
+}
+                      </pre>
+                    </div></td>                
+            </table>
+        </tbody>
+    </table>
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+    
+    for (i = 0; i < acc.length; i++) {
+      acc[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "block") {
+          content.style.display = "none";
+        } else {
+          content.style.display = "block";
+        }
+      });
+    }
+    const codeCells = document.querySelectorAll('.code-cell');
+
+codeCells.forEach(cell => {
+  const button = cell.querySelector('.copy-code');
+  let originalCodeText = cell.innerText; // Store original code text
+
+  button.addEventListener('click', () => {
+    const codeText = originalCodeText.replace(/\s*Copy Code\s*$/, ''); // Use stored original text
+
+    navigator.clipboard.writeText(codeText)
+      .then(() => {
+        button.innerText = 'Copied!';
+      })
+      .catch(() => {
+        button.innerText = 'Copy Failed!';
+      });
+
+    // Reset button text after a delay
+    setTimeout(() => {
+      button.innerText = '';
+    }, 2000); // Reset after 2 seconds
+  });
+});
+
+
+
+</script>

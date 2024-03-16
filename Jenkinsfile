@@ -52,6 +52,13 @@ pipeline {
           sh 'python3 src/app/tests/test_views.py'
         }
       }
+          stage("Code Analysis") {
+      steps {
+        withSonarQubeEnv(credentialsId: 'jenkins-sonarqube')
+            sh 'python3 sonar:sonar'
+
+      }
+    }
     }
   }
 }
