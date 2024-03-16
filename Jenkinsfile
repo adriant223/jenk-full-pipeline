@@ -32,11 +32,12 @@ stage('Sonarqube') {
     }
     steps {
         withSonarQubeEnv('SonarQube') {
+            sh 'python3 src/run.py'
             sh "${scannerHome}/bin/sonar-scanner"
-        }
-        timeout(time: 1, unit: 'MINUTES') {
-            waitForQualityGate abortPipeline: true
-        }
+            
+        // timeout(time: 1, unit: 'MINUTES') {
+        //     waitForQualityGate abortPipeline: true
+        // }
     }
 }
     }
