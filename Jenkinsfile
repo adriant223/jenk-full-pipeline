@@ -11,7 +11,7 @@ pipeline {
     RELEASE = "v1.0"
     DOCKER_USER = "atimis224"
     DOCKER_PASS = "docker-creds"
-    IMAGINE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
+    IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
     IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
   }
   stages {
