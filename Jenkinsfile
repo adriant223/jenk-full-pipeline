@@ -57,9 +57,10 @@ pipeline {
       steps {
         script{
         withSonarQubeEnv(credentialsId: 'jenkins-sonarqube')
-            sh 'python3 src/app/tests/test_api.py'
+            sh 'python3 src/run.py'
       }
       }
     }
     }
   }
+
