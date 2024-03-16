@@ -57,7 +57,7 @@ pipeline {
     steps{
         script{
                     withSonarQubeEnv(credentialsId: 'jenkins-sonarqube') {
-                        sh 'sonar-scanner \
+                        sh '${scannerHome}/bin/sonar-scanner \
                             -Dproject.keys=code-scanner \
                             -Dsonar.projectKey=code-scanner \
                             -Dsonar.sources=src/run.py \
