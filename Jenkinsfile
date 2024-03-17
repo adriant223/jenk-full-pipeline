@@ -16,7 +16,6 @@ pipeline {
     JENKINS_TOKEN = credentials('JENK_TOK')
     
     }
-  }
   stages {
     stage("del WS") {
       steps {
