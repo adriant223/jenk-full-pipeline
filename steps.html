@@ -394,6 +394,35 @@ EOF
       </tr>
       <tr>
         <td class="code-cell">
+            newgrp docker
+            <button class="copy-code"></button>
+        <td>Make sure there are changes within the groups</td>
+        <td>- newgrp changes the current real group ID to the specified group, or, if no group is specified, to the default group listed in the file /etc/passwd. newgrp </td>
+      </tr>
+      <tr>
+        <td class="code-cell">
+            chmod 777 /var/run/docker.sock
+            sudo chown root:docker /var/run/docker.sock
+            <button class="copy-code"></button>
+        <td>In case you get a docker.sock error</td>
+        <td>- To be used only on dev / home labs and only in case you get a permission denied for docker.sock -- reboot the machine after applying these commands</td>
+      </tr>
+      <tr>
+        <td class="code-cell">
+            sudo groupadd docker
+            <button class="copy-code"></button>
+        <td>Create the a group.</td>
+        <td>- Creates a docker group where the user from the Jenkins-agent will be added</td>
+      </tr>
+      <tr>
+        <td class="code-cell">
+            sudo usermod -aG docker $USER
+            <button class="copy-code"></button>
+        <td>Add the curent user to the docker group</td>
+        <td>- Add the current $USER to the docker group Note! Make sure you are logged in as the user used by the jenkins-agent when using this command!</td>
+      </tr>
+      <tr>
+        <td class="code-cell">
             mkdir ~/.ssh
             <button class="copy-code"></button>
         <td>Creates the hidden directory ".ssh" in the user's home directory (if it doesn't exist).</td>
