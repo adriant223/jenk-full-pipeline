@@ -13,6 +13,7 @@ pipeline {
     DOCKER_PASS = "docker-creds"
     IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
     IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
+    JENKINS_TOKEN = "${JENK_TOK}"
   }
   stages {
     stage("del WS") {
@@ -71,7 +72,7 @@ stage('Sonar Analyzing code') {
             stage("Trigger for ArgoCD IMAGE SYNC") {
       steps {
         script {
-            sh 'curl -v -k --user admin:${JENKapiTOKEN}' -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}'  'http://jenk-at.com/job/application-release-prod/buildWithParameters?token=988634032f85b6c63bc47479ae1be23e'
+            sh 'curl -v -k --user admin:${JENKINS_TOKEN}' -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}'  'http://jenk-at.com/job/application-release-prod/buildWithParameters?token=988634032f85b6c63bc47479ae1be23e'
         }
       }
         }      
