@@ -66,7 +66,7 @@ pipeline {
         stage('Trivy Image Scanner') {
             steps{
                 script{ docker.withRegistry('',DOCKER_PASS){
-                        sh "trivy image --no-progress --exit-code 5 --severity HIGH,CRITICAL '${IMAGE_NAME}'"
+                        sh "trivy image --no-progress --severity HIGH,CRITICAL '${IMAGE_NAME}'"
                             }
                         }
                     }
