@@ -73,6 +73,7 @@ stage('Sonar Analyzing code') {
             stage("Trigger for ArgoCD IMAGE SYNC") {
       steps {
         script {
+            withCredentials([usernamePassword(credentialsId: 'JENK_TOK', usernameVariable: 'username', passwordVariable: 'password')])
             sh "curl -v -k --user admin:${JENKINS_TOKEN} -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}'  'http://at-jenk.com/job/application-release-prod/buildWithParameters?token=988634032f85b6c63bc47479ae1be23e'"
         }
       }
