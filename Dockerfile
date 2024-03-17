@@ -8,9 +8,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY $srcDir/run.py .
 COPY $srcDir/app ./app
 
-FROM build AS vulnscan
-COPY --from=aquasec/trivy:latest /usr/local/bin/trivy usr/local/bin/trivy
-RUN trivy rootfs --no-progress /
+# FROM build AS vulnscan
+# COPY --from=aquasec/trivy:latest /usr/local/bin/trivy usr/local/bin/trivy
+# RUN trivy rootfs --no-progress /
 
 
 EXPOSE 5000
