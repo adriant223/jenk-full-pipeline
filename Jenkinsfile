@@ -70,7 +70,6 @@ pipeline {
                         }
                     }
                 }
-            }
 
          stage('Docker Image PUSH') {
             steps{
