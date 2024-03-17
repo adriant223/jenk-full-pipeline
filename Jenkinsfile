@@ -17,52 +17,64 @@ pipeline {
     
     }
   stages {
-    stage("del WS") {
+       stage("del WS") {
       steps {
         cleanWs()  // Clean workspace before checkout
       }
     }
 
-    stage("Git checkout") {
+       stage("Git checkout") {
       steps {
         git branch: 'main', credentialsId: 'github', url: 'https://github.com/adriant223/jenk-full-pipeline'
       }
     }
         stage("Test App") {
-      steps {
-        script {
+            steps {
+                script {
           sh 'python3 src/app/tests/test_api.py'
           sh 'python3 src/app/tests/test_views.py'
-        }
-      }
+                }
+            }
         }    
-stage('Sonar Analyzing code') {
-    environment {
+        stage('Sonar Analyzing code') {
+            environment {
         scannerHome = tool 'sonar-qube-scanner'
     }
-    steps {
+            steps {
         withSonarQubeEnv('SonarQube') {
             sh "${scannerHome}/bin/sonar-scanner"
-            
-        // timeout(time: 1, unit: 'MINUTES') {
-        //     waitForQualityGate abortPipeline: true
-        // }
                 }
             }
          }
-    stage('Sonar Quality Gate') {
-        steps{
-            script{
+        stage('Sonar Quality Gate') {
+            steps{
+                script{
                 waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube'
                 }
             }
         }
-        stage('Docker IMG BD&PUSH') {
-        steps{
-            script{
+        stage('Docker IMG BUILD') {
+            steps{
+                script{
                 docker.withRegistry('',DOCKER_PASS){
                     docker_image = docker.build "${IMAGE_NAME}"
+                        }
+                    }
                 }
+            }
+
+        stage('Trivy Image Scanner') {
+            steps{
+                script{
+                        sh "trivy --no-progress --exit-code 1 --severity HIGH, CRITICAL '${IMAGE_NAME}'"
+                        }
+                    }
+                }
+            }
+
+         stage('Docker Image PUSH') {
+            steps{
+                script{
                  docker.withRegistry('',DOCKER_PASS){
                     docker_image.push("${IMAGE_TAG}")
 
@@ -70,14 +82,14 @@ stage('Sonar Analyzing code') {
                     }
                 }
             }
-            stage("Trigger for ArgoCD IMAGE SYNC") {
-      steps {
-        script {
+        stage("Trigger for ArgoCD IMAGE SYNC") {
+            steps {
+                script {
             
             sh "curl -v -k --user admin:${JENKINS_TOKEN} -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}'  'http://at-jenk.com/job/application-release-prod/buildWithParameters?token=988634032f85b6c63bc47479ae1be23e'"
-        }
-      }
-        }      
+                    }
+                }
+             }      
          
          } // stages ending
 } // pipe line ending
