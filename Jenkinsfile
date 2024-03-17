@@ -57,15 +57,9 @@ pipeline {
             steps{
                 script{
                         sh """
-                            IMAGE_NAME_RMI="atimis224/my-demo-app"  
-                            VERSION_PREFIX="v1.0-"             
+                            sh rm-old-docker.sh  # Replace with the actual path to your script
+                        """
 
-                            IMAGES=$(docker images --filter reference="$IMAGE_NAME_RMI:$VERSION_PREFIX*" --format "{{.ID}}")
-                            for image_id in $IMAGES; do
-                                    echo "Removing image: $image_id"
-                                        docker rmi "$image_id" --force
-                                done
-                            """
                         }
                     }
                 }
