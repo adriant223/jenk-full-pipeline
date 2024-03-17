@@ -57,7 +57,7 @@ pipeline {
             steps{
                 script{
                         sh """
-                            IMAGE_NAME)RMI="atimis224/my-demo-app"  
+                            IMAGE_NAME_RMI="atimis224/my-demo-app"  
                             VERSION_PREFIX="v1.0-"             
 
                             IMAGES=$(docker images --filter reference="$IMAGE_NAME_RMI:$VERSION_PREFIX*" --format "{{.ID}}")
