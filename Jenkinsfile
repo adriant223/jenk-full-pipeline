@@ -63,10 +63,18 @@ stage('Sonar Analyzing code') {
                 }
                  docker.withRegistry('',DOCKER_PASS){
                     docker_image.push("${IMAGE_TAG}")
-                }
+
+                        }
+                    }
                 }
             }
-        }     
+            stage("Trigger for ArgoCD IMAGE SYNC") {
+      steps {
+        script {
+            sh 'curl -v -k --user admin:${JENKapiTOKEN}' -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}'  'http://jenk-at.com/job/application-release-prod/buildWithParameters?token=988634032f85b6c63bc47479ae1be23e'
+        }
+      }
+        }      
          
          } // stages ending
 } // pipe line ending
