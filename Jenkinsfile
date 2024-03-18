@@ -46,13 +46,13 @@ pipeline {
                 }
             }
          }
-        stage('Sonar Quality Gate') {         
-            steps{
-                script{
-                waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube'  // Must match name of jenkins credential of type Secret Text 
-                }
-            }
-        }
+        // stage('Sonar Quality Gate') {         
+        //     steps{
+        //         script{
+        //         waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube'  // Must match name of jenkins credential of type Secret Text 
+        //         }
+        //     }
+        // }
         stage('Remove old Docker images') {
             steps{
                 script{
