@@ -401,8 +401,10 @@ EOF
       </tr>
       <tr>
         <td class="code-cell">
-            chmod 777 /var/run/docker.sock
-            sudo chown root:docker /var/run/docker.sock
+            <code>
+chmod 777 /var/run/docker.sock
+sudo chown root:docker /var/run/docker.sock
+            </code>
             <button class="copy-code"></button>
         <td>In case you get a docker.sock error</td>
         <td>- To be used only on dev / home labs and only in case you get a permission denied for docker.sock -- reboot the machine after applying these commands</td>
@@ -476,6 +478,13 @@ $ sudo yum -y install trivy
         <td>Installs the development libraries for Python 3.</td>
         <td>- Provides necessary tools and libraries for building Python 3 extensions or applications.</td>
       </tr>
+      <tr>
+        <td class="code-cell">
+            sudo dnf install git
+            <button class="copy-code"></button>
+        <td>git will be needed</td>
+        <td>- Jenkins agent will use git to grab our 'Jenkins' file from the git-repo</td>
+    </tr>
 <tr><td><h2>SonarQube</h2></td>
 <td style="color: red;">SONAR-QUBE SECTION STARTS HERE</td></tr>
         <td class="code-cell">
@@ -515,22 +524,25 @@ EOF
         
         <tr>
         <td class="code-cell">
-        rpm -Uvh https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+            <code>
+sudo dnf update
+sudo dnf install postgresql-server postgresql-contrib
+sudo postgresql-setup --initdb
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
+vi /var/lib/pgsql/data/pg_hba.conf
+</code>
         <button class="copy-code"></button>
         </td>
-        <td>Installs the PostgreSQL repository.</td>
+        <td><code>
+- Under local add the value below
+
+host    all             all             127.0.0.1/32            md5
+        </code>
+        </td>
+        <td>Installs the PostgreSQL.</td>
         <td>- Enables installation of the PostgreSQL database server used by SonarQube.</td>
         </tr>
-        
-        <tr>
-        <td class="code-cell">
-        sudo yum install postgresql-server postgresql-contrib
-        <button class="copy-code"></button>
-        </td>
-        <td>Installs the PostgreSQL server and additional contrib packages.</td>
-        <td>- Sets up the PostgreSQL database for SonarQube.</td>
-        </tr>
-        
         <tr>
         <td class="code-cell">
         sudo systemctl start postgresql.service

@@ -36,23 +36,23 @@ pipeline {
                 }
             }
         }    
-    //     stage('Sonar Analyzing code') {
-    //         environment {
-    //     scannerHome = tool 'sonar-qube-scanner'
-    // }
-    //         steps {
-    //     withSonarQubeEnv('SonarQube') {
-    //         sh "${scannerHome}/bin/sonar-scanner"
-    //             }
-    //         }
-    //      }
-    //     stage('Sonar Quality Gate') {
-    //         steps{
-    //             script{
-    //             waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube'
-    //             }
-    //         }
-    //     }
+        stage('Sonar Analyzing code') {
+            environment {
+        scannerHome = tool 'sonar-qube-scanner'
+    }
+            steps {
+        withSonarQubeEnv('SonarQube') {
+            sh "${scannerHome}/bin/sonar-scanner"
+                }
+            }
+         }
+        stage('Sonar Quality Gate') {         
+            steps{`
+                script{
+                waitForQualityGate abortPipeline: false, credentialsId: 'jenkins-sonarqube'
+                }
+            }
+        }
     //     stage('Remove old Docker images') {
     //         steps{
     //             script{
