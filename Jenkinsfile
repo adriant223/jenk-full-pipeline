@@ -9,7 +9,7 @@ pipeline {
   environment{
     APP_NAME = "my-demo-app"
     RELEASE = "v1.0"
-    DOCKER_USER = "atimis224"
+    DOCKER_USER = "yourDockerID"
     DOCKER_PASS = "docker-creds"
     IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
     IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
@@ -25,7 +25,7 @@ pipeline {
 
        stage("Git checkout") {
       steps {
-        git branch: 'main', credentialsId: 'github', url: 'https://github.com/adriant223/jenk-full-pipeline'
+        git branch: 'main', credentialsId: 'github', url: 'https://github.com/your repo/your folder'
       }
     }
         stage("Test App") {
@@ -96,7 +96,7 @@ pipeline {
             steps {
                 script {
             
-            sh "curl -v -k --user admin:${JENKINS_TOKEN} -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}'  'http://at-jenk.com/job/application-release-prod/buildWithParameters?token=988634032f85b6c63bc47479ae1be23e'"
+            sh "curl -v -k --user admin:${JENKINS_TOKEN} -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}'  'http://at-jenk.com/job/application-release-prod/buildWithParameters?token=YourTokenToTriggerPipelineBasedOn'"
                     }
                 }
              }      
