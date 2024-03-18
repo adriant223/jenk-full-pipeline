@@ -452,6 +452,25 @@ sudo cat ~/.ssh/jenk-agent_rsa
       </tr>
       <tr>
         <td class="code-cell">
+<code>
+sudo vim /etc/yum.repos.d/trivy.repo
+[trivy]
+name=Trivy repository
+baseurl=https://aquasecurity.github.io/trivy-repo/rpm/releases/$releasever/$basearch/
+gpgcheck=0
+enabled=1
+
+docker pull aquasec/trivy:latest
+
+$ sudo yum -y update
+$ sudo yum -y install trivy
+</code>>
+            <button class="copy-code"></button>
+        <td>Install trivy for image scanning</td>
+        <td>- .</td>
+      </tr>
+      <tr>
+        <td class="code-cell">
             sudo yum install python3-devel
             <button class="copy-code"></button>
         <td>Installs the development libraries for Python 3.</td>
@@ -769,7 +788,68 @@ proxy_request_buffering    off; # Required for HTTP CLI commands
 
 }
                       </pre>
-                    </div></td>                
+                    </div></td>
+                   <tr><td><h2>ArgoCD</h2></td></tr>
+                   <tr>
+                    <td class="code-cell">
+<code>
+sudo bash
+
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server" sh -s - --disable traefik
+
+exit
+
+mkdir .kube
+
+sudo cp /etc/rancher/k3s/k3s.yaml ./config
+
+sudo chown vagrant:vagrant config
+
+sudo chown vagrant:vagrant -R rancher/
+
+chmod 666 config
+
+export KUBECONFIG=~/.kube/config
+
+kubectl create namespace argocd
+
+kubectl config set-context --current --namespace=argocd
+
+
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+</code>
+                      <button class="copy-code"></button>
+                    </td>
+                    <td>Install k3s && argoCD</td>
+                    <td>- --</td>
+                </tr>
+                <tr>
+                    <td class="code-cell">
+<code>
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
+helm repo update
+
+helm install prometheus prometheus-community/kube-prometheus-stack -n monitoring
+
+kubectl port-forward service/prometheus-kube-prometheus-prometheus 9090:9090
+
+kubectl port-forward service/prometheus-grafana 3000:80
+
+kubectl patch svc  prometheus-kube-prometheus-prometheus -n default -p '{"spec": {"type": "NodePort"}}'
+
+kubectl patch svc  prometheus-grafana -n default -p '{"spec": {"type": "NodePort"}}'
+
+user: admin
+pass: prom-operator
+</code>
+                      <button class="copy-code"></button>
+                    </td>
+                    <td>Install Prometheus -- Grafana </td>
+                    <td>
+
+                      </td>
+                  </tr>
             </table>
         </tbody>
     </table>
