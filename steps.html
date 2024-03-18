@@ -817,7 +817,9 @@ sudo cp /etc/rancher/k3s/k3s.yaml ./config
 
 sudo chown vagrant:vagrant config
 
-sudo chown vagrant:vagrant -R rancher/
+sudo chown vagrant:vagrant -R /etc/rancher/
+
+mv config .kube
 
 chmod 666 config
 
@@ -829,6 +831,17 @@ kubectl config set-context --current --namespace=argocd
 
 
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+
+sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
+
+argocd admin initial-password
+
+rm argocd-linux-amd64
+
+kubectl patch svc  argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}'
+
 </code>
                       <button class="copy-code"></button>
                     </td>
@@ -838,11 +851,17 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/st
                 <tr>
                     <td class="code-cell">
 <code>
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+
+chmod go-r ~/.kube/config
+
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 
 helm repo update
 
-helm install prometheus prometheus-community/kube-prometheus-stack -n monitoring
+helm install prometheus-community/kube-prometheus-stack -n default
 
 kubectl port-forward service/prometheus-kube-prometheus-prometheus 9090:9090
 
@@ -854,6 +873,14 @@ kubectl patch svc  prometheus-grafana -n default -p '{"spec": {"type": "NodePort
 
 user: admin
 pass: prom-operator
+
+curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+
+sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
+
+rm argocd-linux-amd64
+
+argocd cluster add rancher-desktop --label environment=dev --insecure --in-cluster -y --upsert
 </code>
                       <button class="copy-code"></button>
                     </td>
