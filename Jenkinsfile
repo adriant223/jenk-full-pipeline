@@ -13,7 +13,7 @@ pipeline {
     DOCKER_PASS = "docker-creds"
     IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
     IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
-    JENKINS_TOKEN = credentials("JENK_TOK")
+    // JENKINS_TOKEN = credentials("JENK_TOK")
     
     }
   stages {
