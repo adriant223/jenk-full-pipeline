@@ -6,3 +6,4 @@ gunicorn==22.0.0
 black==20.8b1
 flake8==3.9.0
 pytest==6.2.2
+zipp>=3.19.1 # not directly required, pinned by Snyk to avoid a vulnerability
